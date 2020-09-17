@@ -19,7 +19,6 @@ export class ElectrumClient extends Client {
     this.timeLastCall = new Date().getTime();
     const parentPromise = super.request(method, params);
     return parentPromise.then(response => {
-      this.keepAlive();
       return response;
     });
   }
@@ -28,7 +27,6 @@ export class ElectrumClient extends Client {
     this.timeLastCall = new Date().getTime();
     const parentPromise = super.requestBatch(method, params, secondParam);
     return parentPromise.then(response => {
-      this.keepAlive();
       return response;
     });
   }

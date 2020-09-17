@@ -1,24 +1,31 @@
+import { ElectrumClient } from './electrum_client';
 const bitcoin = require('bitcoinjs-lib');
-import { ElectrumClient } from './electrum-client';
 let reverse = require('buffer-reverse');
-let BigNumber = require('bignumber.js');
+//let BigNumber = require('bignumber.js');
 
-const hardcodedPeers = [
-  { host: 'ec0.kevacoin.org', ssl: '50002' },
-  { host: 'ec1.kevacoin.org', ssl: '50002' },
-];
+const IS_DEV = true;
+
+let hardcodedPeers = IS_DEV ?
+  [
+    { host: '127.0.0.1', ws: '8080' },
+  ]
+  :
+  [
+    { host: 'ec0.kevacoin.org', ssl: '50002' },
+    { host: 'ec1.kevacoin.org', ssl: '50002' },
+  ];
 
 let mainClient = false;
 let mainConnected = false;
 let wasConnectedAtLeastOnce = false;
 let serverName = false;
 
-async function connectMain() {
+export async function connectMain() {
   let usingPeer = await getRandomHardcodedPeer();
   try {
     console.log('begin connection:', JSON.stringify(usingPeer));
-    mainClient = new ElectrumClient(usingPeer.ssl || usingPeer.tcp, usingPeer.host, usingPeer.ssl ? 'tls' : 'tcp');
-    const ver = await mainClient.initElectrum({ client: 'bluewallet', version: '1.4' });
+    mainClient = new ElectrumClient(usingPeer.ws, usingPeer.host, usingPeer.wss ? 'wss' : 'ws');
+    const ver = await mainClient.initElectrum({ client: 'keva_web_client', version: '1.4' });
     if (ver && ver[0]) {
       console.log('connected to ', ver);
       serverName = ver[0];
@@ -102,7 +109,7 @@ export const ping = async function() {
         throw new Error("Cannot reconnect");
       }
     } catch (connErr) {
-      throw new Error(loc._.bad_network);
+      throw new Error('Bad network');
     }
     return true;
   }
@@ -328,12 +335,15 @@ export const estimateFee = async function(numberOfBlocks) {
   numberOfBlocks = numberOfBlocks || 1;
   let coinUnitsPerKilobyte = await mainClient.blockchainEstimatefee(numberOfBlocks);
   if (coinUnitsPerKilobyte === -1) return 1;
+  /*
   return Math.round(
     new BigNumber(coinUnitsPerKilobyte)
       .dividedBy(1024)
       .multipliedBy(100000000)
       .toNumber(),
   );
+  */
+  return 1024;
 };
 
 export const serverFeatures = async function() {
@@ -386,8 +396,6 @@ export const testConnection = async function(host, tcpPort, sslPort) {
 export const forceDisconnect = () => {
   mainClient.close();
 };
-
-export const hardcodedPeers = hardcodedPeers;
 
 let splitIntoChunks = function(arr, chunkSize) {
   let groups = [];

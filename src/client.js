@@ -1,5 +1,5 @@
+import { makeRequest, createPromiseResult, createPromiseResultBatch } from './util';
 const EventEmitter = require('events').EventEmitter;
-import { makeRequest, MessageParser, createPromiseResult, createPromiseResultBatch } from './util';
 
 export class Client {
 
@@ -9,9 +9,6 @@ export class Client {
     this.host = host;
     this.callback_message_queue = {};
     this.subscribe = new EventEmitter();
-    this.mp = new MessageParser((body, n) => {
-      this.onMessage(body, n);
-    });
     this._protocol = protocol; // saving defaults
     this._options = options;
   }
@@ -31,12 +28,11 @@ export class Client {
 
       ws.onopen = () => {
         console.log("connected websocket main component");
-        this.timeout = 250;
         resolve();
       };
 
       ws.onmessage = (messageEvent) => {
-        this.onRecv(messageEvent.data);
+        this.onMessage(messageEvent.data);
       }
 
       ws.onclose = e => {
@@ -131,12 +127,12 @@ export class Client {
     }
   }
 
-  onMessage(body, n) {
+  onMessage(body) {
     const msg = JSON.parse(body);
     if (msg instanceof Array) {
       this.response(msg);
     } else {
-      if (msg.id !== void 0) {
+      if (msg.id !== 0) {
         this.response(msg);
       } else {
         this.subscribe.emit(msg.method, msg.params);
@@ -152,15 +148,4 @@ export class Client {
     });
   }
 
-  onRecv(chunk) {
-    this.mp.run(chunk);
-  }
-
-  onEnd(e) {
-    console.log('OnEnd:' + e);
-  }
-
-  onError(e) {
-    console.warn('OnError:' + e);
-  }
 }
