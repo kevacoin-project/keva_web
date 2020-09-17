@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import { connectMain, ping, serverFeatures } from './keva_electrum';
+import { KevaClient } from './keva_electrum';
+import {
+  getNamespaceInfoFromShortCode, fetchKeyValueList,
+  getNamespaceScriptHash, mergeKeyValueList
+} from './keva_ops';
 
 class Page extends Component {
 
@@ -37,11 +40,15 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    await connectMain();
-    const isConnected = await ping();
+    await KevaClient.connectMain();
+    const isConnected = await KevaClient.ping();
     if (isConnected) {
-      let feature = await serverFeatures();
-      this.setState({feature: JSON.stringify(feature)});
+      const shortCode = '5570511';
+      let nsInfo = await getNamespaceInfoFromShortCode(KevaClient, shortCode);
+      const history = await KevaClient.blockchainScripthash_getHistory(getNamespaceScriptHash(nsInfo.namespaceId));
+      let keyValues = await fetchKeyValueList(KevaClient, history, [], true);
+      keyValues = mergeKeyValueList(keyValues);
+      this.setState({feature: JSON.stringify(keyValues)});
     }
   }
 
