@@ -11,6 +11,7 @@
     "bs58check": "^2.1.2",
     "buffer-reverse": "^1.0.1",
     "coinselect": "^3.1.12",
+    "ipfs": "^0.50.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.3.0",
     "react-dom": "^16.13.1",

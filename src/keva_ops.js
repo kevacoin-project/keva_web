@@ -1,3 +1,4 @@
+/* eslint eqeqeq: "off" */
 const bitcoin = require('bitcoinjs-lib');
 const base58check = require('bs58check')
 const coinSelectAccumulative = require('coinselect/accumulative');
@@ -565,7 +566,7 @@ export function parseReplyKey(key) {
 }
 
 function createRewardKey(txId, shortCode) {
-  return `\$${txId.substring(0, 8)}:${shortCode}`
+  return `$${txId.substring(0, 8)}:${shortCode}`
 }
 
 export function parseRewardKey(key) {

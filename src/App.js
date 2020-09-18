@@ -5,11 +5,15 @@ import {
   getNamespaceInfoFromShortCode, fetchKeyValueList,
   getNamespaceScriptHash, mergeKeyValueList
 } from './keva_ops';
+import Ipfs from 'ipfs';
+const uint8ArrayFromString = require('uint8arrays/from-string')
+
 
 class Page extends Component {
 
   constructor(props) {
     super();
+    this.ipfs = null;
   }
 
   render() {
@@ -36,10 +40,42 @@ class Main extends Component {
     super();
     this.state = {
       feature: '',
+      ipfsVersion: '',
     };
   }
 
-  async componentDidMount() {
+  async startIpfs() {
+    if (this.ipfs) {
+      console.log('IPFS already started');
+    } else {
+      try {
+        console.time('IPFS Started');
+        this.ipfs = await Ipfs.create();
+        const ipfsVersion = await this.ipfs.version();
+        this.setState({ipfsVersion: ipfsVersion.version});
+        console.timeEnd('IPFS Started');
+        const file = await this.ipfs.add({
+          path: 'hello.txt',
+          content: uint8ArrayFromString('Hello World Kevacoin 102')
+        });
+        console.log('Added file:', file.path, file.cid.toString());
+      } catch (error) {
+        console.error('IPFS init error:', error);
+        this.ipfs = null;
+      }
+    }
+  }
+
+  stopIpfs() {
+    if (this.ipfs && this.ipfs.stop) {
+      console.log('Stopping IPFS');
+      this.ipfs.stop().catch(err => console.error(err));
+      this.ipfs = null;
+    }
+  }
+
+  async getKeva() {
+    // Keva
     await KevaClient.connectMain();
     const isConnected = await KevaClient.ping();
     if (isConnected) {
@@ -52,8 +88,18 @@ class Main extends Component {
     }
   }
 
+  async componentDidMount() {
+    // Start IPFS.
+    await this.startIpfs();
+  }
+
   render() {
-    return <Page feature={this.state.feature}/>;
+    return (
+      <div>
+        <p>IPFS ID: {this.state.ipfsVersion}</p>
+        <Page feature={this.state.feature}/>;
+      </div>
+    )
   }
 }
 
