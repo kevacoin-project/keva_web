@@ -6,8 +6,7 @@ import {
   getNamespaceScriptHash, mergeKeyValueList
 } from './keva_ops';
 import Ipfs from 'ipfs';
-const uint8ArrayFromString = require('uint8arrays/from-string')
-
+import { ImageUpload } from './ImageUpload';
 
 class Page extends Component {
 
@@ -54,11 +53,6 @@ class Main extends Component {
         const ipfsVersion = await this.ipfs.version();
         this.setState({ipfsVersion: ipfsVersion.version});
         console.timeEnd('IPFS Started');
-        const file = await this.ipfs.add({
-          path: 'hello.txt',
-          content: uint8ArrayFromString('Hello World Kevacoin 102')
-        });
-        console.log('Added file:', file.path, file.cid.toString());
       } catch (error) {
         console.error('IPFS init error:', error);
         this.ipfs = null;
@@ -72,6 +66,11 @@ class Main extends Component {
       this.ipfs.stop().catch(err => console.error(err));
       this.ipfs = null;
     }
+  }
+
+  onUpload = async (file) => {
+    const fileInfo = await this.ipfs.add(file);
+    console.log('Added file:', fileInfo.path, fileInfo.cid.toString());
   }
 
   async getKeva() {
@@ -95,9 +94,10 @@ class Main extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{padding: 20}}>
         <p>IPFS ID: {this.state.ipfsVersion}</p>
-        <Page feature={this.state.feature}/>;
+        {/*<Page feature={this.state.feature}/> */}
+        <ImageUpload onUpload={this.onUpload} />
       </div>
     )
   }
@@ -106,9 +106,7 @@ class Main extends Component {
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Main />
-      </header>
+      <Main />
     </div>
   );
 }
