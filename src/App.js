@@ -24,6 +24,10 @@ const Info = styled.p`
   line-height: 4px;
 `;
 
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 class Page extends Component {
 
   constructor(props) {
@@ -57,6 +61,7 @@ class Main extends Component {
       feature: '',
       ipfsVersion: '',
       ipfsPeers: [],
+      cids: [],
     };
   }
 
@@ -88,9 +93,17 @@ class Main extends Component {
       return;
     }
     const ipfsPeers = await this.ipfs.swarm.peers();
-    this.setState({
-      ipfsPeers: ipfsPeers,
-    });
+    if (ipfsPeers.length > 0) {
+      let cids = [];
+      for await (const { cid, type } of this.ipfs.pin.ls()) {
+        cids.push(cid);
+      }
+      this.setState({cids, ipfsPeers});
+    } else {
+      this.setState({
+        ipfsPeers: [],
+      });
+    }
   }
 
   stopIpfs() {
@@ -101,9 +114,25 @@ class Main extends Component {
     }
   }
 
-  onUpload = async (file) => {
-    const fileInfo = await this.ipfs.add(file);
+  onFileChange = async (file) => {
+    this.fileToUpload = file;
+    this.setState({pinned: false})
+  }
+
+  onUpload = async () => {
+    if (!this.fileToUpload) {
+      return;
+    }
+    this.setState({pinning: true});
+    const fileInfo = await this.ipfs.add(this.fileToUpload);
     console.log('Added file:', fileInfo.path, fileInfo.cid.toString());
+    await this.ipfs.pin.add(fileInfo.cid);
+    await sleep(2000);
+    let cids = [];
+    for await (const { cid, type } of this.ipfs.pin.ls()) {
+      cids.push(cid);
+    }
+    this.setState({pinned: true, pinning: false, cids});
   }
 
   async getKeva() {
@@ -127,10 +156,19 @@ class Main extends Component {
   }
 
   render() {
+    const {pinned, pinning, cids} = this.state;
+    let pinnedFiles = cids.map((c, i) => {
+      return (
+        <div key={i} style={{alignSelf: 'center'}}>
+          <a  href={`https://ipfs.io/ipfs/${c}`}>{c.toString()}</a>
+        </div>
+      )
+    })
     return (
       <Container>
         {/*<Page feature={this.state.feature}/> */}
-        <ImageUpload onUpload={this.onUpload} />
+        <ImageUpload onUpload={this.onUpload} onFileChange={this.onFileChange} pinned={pinned} pinning={pinning}/>
+        { pinnedFiles }
         <Info>Status: {
           this.state.ipfsPeers.length > 0
           ?

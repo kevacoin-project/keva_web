@@ -1,7 +1,8 @@
 import React, {useCallback, useState} from 'react'
+import Spinner from 'react-bootstrap/Spinner';
 import {useDropzone} from 'react-dropzone'
 import styled from 'styled-components'
-import { FiImage } from "react-icons/fi";
+import { FiImage, FiCheckCircle,  FiUploadCloud} from "react-icons/fi";
 
 const InputDiv = styled.div`
   align-self: center;
@@ -17,13 +18,32 @@ const InputDiv = styled.div`
   }
 `
 
-const StyledIcon = styled(FiImage)`
+const FileIcon = styled(FiImage)`
   color: #2980B9;
-  font-size: 26px;
+  font-size: 30px;
   align-self: center;
   :hover {
     color: #7FB3D5;
   }
+`
+
+const UploadIcon = styled(FiUploadCloud)`
+  cursor: pointer;
+  color: #fff;
+  font-size: 30px;
+  align-self: center;
+`
+
+const CheckIcon = styled(FiCheckCircle)`
+  cursor: pointer;
+  color: #fff;
+  font-size: 30px;
+  align-self: center;
+`
+
+const SpinnerIcon = styled(Spinner)`
+  color: #fff;
+  align-self: center;
 `
 
 const StyledImg = styled.img`
@@ -44,6 +64,19 @@ const ImgContainer = styled.div`
   justify-content: center;
 `
 
+const Backdrop = styled.div`
+  align-self: center;
+  position: relative;
+  top: -350px;
+  left: 0px;
+  height: 60px;
+  width: 350px;
+  opacity: 0.7;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+`
+
 export function ImageUpload(props) {
   const [imageURL, setImageURL] = useState('');
   const onDrop = useCallback((acceptedFiles) => {
@@ -55,19 +88,37 @@ export function ImageUpload(props) {
         setImageURL(reader.result);
       }
       reader.readAsDataURL(file);
-      props.onUpload(file);
+      props.onFileChange(file);
     })
 
   }, []);
 
   const {getRootProps, getInputProps} = useDropzone({onDrop})
 
+  let icon = null;
+  if (props.pinned) {
+    icon = <CheckIcon/>
+  } else if (props.pinning) {
+    icon = (
+      <SpinnerIcon animation="border" role="status">
+      </SpinnerIcon>
+    );
+  } else {
+    icon = <UploadIcon onClick={props.onUpload}/>
+  }
+
   return (
-    <InputDiv {...getRootProps({ refKey: 'innerRef' })}>
-      <input {...getInputProps()} />
-      <ImgContainer>
-        {(imageURL.length > 0) ? <StyledImg src={imageURL} /> : <StyledIcon />}
-      </ImgContainer>
-    </InputDiv>
+    <>
+      <InputDiv {...getRootProps({ refKey: 'innerRef' })}>
+        <input {...getInputProps()} />
+        <ImgContainer>
+          {(imageURL.length > 0) ? <StyledImg src={imageURL} /> : <FileIcon />}
+        </ImgContainer>
+      </InputDiv>
+      {
+        (imageURL.length > 0) &&
+        <Backdrop style={{pointerEvents: props.pinned ? 'none' : 'auto'}}>{ icon }</Backdrop>
+      }
+    </>
   )
 }
