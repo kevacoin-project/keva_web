@@ -96,7 +96,9 @@ class Main extends Component {
     if (ipfsPeers.length > 0) {
       let cids = [];
       for await (const { cid, type } of this.ipfs.pin.ls()) {
-        cids.push(cid);
+        if (type == 'recursive') {
+          cids.push(cid);
+        }
       }
       this.setState({cids, ipfsPeers});
     } else {
@@ -131,7 +133,9 @@ class Main extends Component {
     await sleep(1000);
     let cids = [];
     for await (const { cid, type } of this.ipfs.pin.ls()) {
-      cids.push(cid);
+      if (type == 'recursive') {
+        cids.push(cid);
+      }
     }
     this.setState({pinned: true, pinning: false, cids});
   }
@@ -161,7 +165,7 @@ class Main extends Component {
     let pinnedFiles = cids.map((c, i) => {
       return (
         <div key={i} style={{alignSelf: 'center'}}>
-          <a  href={`https://ipfs.io/ipfs/${c}`}>{c.toString()}</a>
+          <a href={`https://ipfs.io/ipfs/${c}`} style={{fontSize: 12}}>{c.toString()}</a>
         </div>
       )
     })
@@ -169,7 +173,9 @@ class Main extends Component {
       <Container>
         {/*<Page feature={this.state.feature}/> */}
         <ImageUpload onUpload={this.onUpload} onFileChange={this.onFileChange} pinned={pinned} pinning={pinning}/>
-        { pinnedFiles }
+        <div style={{marginTop: 10, marginBottom: 10, alignSelf: 'center'}}>
+          { pinnedFiles }
+        </div>
         <Info>Status: {
           this.state.ipfsPeers.length > 0
           ?
