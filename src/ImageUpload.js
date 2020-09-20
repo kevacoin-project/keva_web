@@ -1,61 +1,73 @@
-import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import React, {useCallback, useState} from 'react'
+import {useDropzone} from 'react-dropzone'
+import styled from 'styled-components'
+import { FiImage } from "react-icons/fi";
 
-export class ImageUpload extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      file: '',
-      imagePreviewUrl: ''
-    };
-    this._handleImageChange = this._handleImageChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+const InputDiv = styled.div`
+  align-self: center;
+  borderWidth: 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  :hover: {
+    color: red;
   }
-
-  _handleSubmit(e) {
-    e.preventDefault();
-    const onUpload = this.props.onUpload;
-    onUpload && onUpload(this.state.file);
+  :focus {
+    outline: none;
   }
+`
 
-  _handleImageChange(e) {
-    e.preventDefault();
-
-    let reader = new FileReader();
-    let file = e.target.files[0];
-    reader.onloadend = () => {
-      this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
-      });
-    }
-    reader.readAsDataURL(file)
+const StyledIcon = styled(FiImage)`
+  color: #2980B9;
+  font-size: 26px;
+  align-self: center;
+  :hover {
+    color: #7FB3D5;
   }
+`
 
-  render() {
-    let { imagePreviewUrl } = this.state;
-    let imagePreview = null;
-    if (imagePreviewUrl) {
-      imagePreview = (<img src={imagePreviewUrl} style={{width: 300, height: 'auto'}}/>);
-    }
+const StyledImg = styled.img`
+  height: 300px;
+  width: 300px;
+  object-fit: contain;
+  align-self: center;
+`
 
-    return (
-      <div>
-        <Form onSubmit={this._handleSubmit}>
-          <Form.Group>
-            <Form.File id="exampleFormControlFile1" onChange={this._handleImageChange}/>
-          </Form.Group>
-          <Form.Group>
-            <Button type="submit" onClick={this._handleSubmit} disabled={!this.state.file} variant="primary">
-              Upload Image
-            </Button>
-          </Form.Group>
-        </Form>
-        {imagePreview}
-      </div>
-    )
-  }
+const ImgContainer = styled.div`
+  height: 350px;
+  width: 350px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e0e0e0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+`
 
+export function ImageUpload(props) {
+  const [imageURL, setImageURL] = useState('');
+  const onDrop = useCallback((acceptedFiles) => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onabort = () => console.log('file reading was aborted');
+      reader.onerror = () => console.log('file reading has failed');
+      reader.onload = () => {
+        setImageURL(reader.result);
+      }
+      reader.readAsDataURL(file);
+      props.onUpload(file);
+    })
+
+  }, []);
+
+  const {getRootProps, getInputProps} = useDropzone({onDrop})
+
+  return (
+    <InputDiv {...getRootProps({ refKey: 'innerRef' })}>
+      <input {...getInputProps()} />
+      <ImgContainer>
+        {(imageURL.length > 0) ? <StyledImg src={imageURL} /> : <StyledIcon />}
+      </ImgContainer>
+    </InputDiv>
+  )
 }
