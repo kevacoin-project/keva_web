@@ -123,7 +123,7 @@ class Main extends Component {
   async componentDidMount() {
     // Start IPFS.
     await this.startIpfs();
-    setInterval(async () => await this.checkPeers(), 2000);
+    setInterval(async () => await this.checkPeers(), 5000);
   }
 
   render() {
@@ -134,9 +134,9 @@ class Main extends Component {
         <Info>Status: {
           this.state.ipfsPeers.length > 0
           ?
-          <span style={{color: 'green'}}>Connected</span>
+          <span style={{color: 'green'}}>{this.state.ipfsPeers.length} Peers Connected</span>
           :
-          <span style={{color: 'orange'}}>Waiting for connection</span>
+          <span style={{color: 'orange'}}>Connecting to Peers ...</span>
         }
         </Info>
         <Info>Peer Id: {this.state.ipfsID}</Info>
