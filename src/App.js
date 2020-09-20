@@ -124,10 +124,11 @@ class Main extends Component {
       return;
     }
     this.setState({pinning: true});
-    const fileInfo = await this.ipfs.add(this.fileToUpload);
+    // This is to remove the "path" attribute from this.fileToUpload.
+    let file = new File([this.fileToUpload], this.fileToUpload.name);
+    const fileInfo = await this.ipfs.add(file);
     console.log('Added file:', fileInfo.path, fileInfo.cid.toString());
-    await this.ipfs.pin.add(fileInfo.cid);
-    await sleep(2000);
+    await sleep(1000);
     let cids = [];
     for await (const { cid, type } of this.ipfs.pin.ls()) {
       cids.push(cid);
