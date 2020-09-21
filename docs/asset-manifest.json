@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/static/js/main.bae6e0c2.chunk.js",
-    "main.js.map": "/static/js/main.bae6e0c2.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.0d06d938.js",
-    "runtime-main.js.map": "/static/js/runtime-main.0d06d938.js.map",
-    "static/css/2.d9ad5f5c.chunk.css": "/static/css/2.d9ad5f5c.chunk.css",
-    "static/js/2.205a64a2.chunk.js": "/static/js/2.205a64a2.chunk.js",
-    "static/js/2.205a64a2.chunk.js.map": "/static/js/2.205a64a2.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.189f2b460c123fe48bef07379a567519.js": "/precache-manifest.189f2b460c123fe48bef07379a567519.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.d9ad5f5c.chunk.css.map": "/static/css/2.d9ad5f5c.chunk.css.map",
-    "static/css/main.5ecd60fb.chunk.css.map": "/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.205a64a2.chunk.js.LICENSE.txt": "/static/js/2.205a64a2.chunk.js.LICENSE.txt"
+    "main.css": "/keva_web/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/keva_web/static/js/main.f29d9704.chunk.js",
+    "main.js.map": "/keva_web/static/js/main.f29d9704.chunk.js.map",
+    "runtime-main.js": "/keva_web/static/js/runtime-main.291c2230.js",
+    "runtime-main.js.map": "/keva_web/static/js/runtime-main.291c2230.js.map",
+    "static/css/2.d9ad5f5c.chunk.css": "/keva_web/static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.993d4575.chunk.js": "/keva_web/static/js/2.993d4575.chunk.js",
+    "static/js/2.993d4575.chunk.js.map": "/keva_web/static/js/2.993d4575.chunk.js.map",
+    "index.html": "/keva_web/index.html",
+    "precache-manifest.fee22827ce4ddc4678b86265917a7af9.js": "/keva_web/precache-manifest.fee22827ce4ddc4678b86265917a7af9.js",
+    "service-worker.js": "/keva_web/service-worker.js",
+    "static/css/2.d9ad5f5c.chunk.css.map": "/keva_web/static/css/2.d9ad5f5c.chunk.css.map",
+    "static/css/main.5ecd60fb.chunk.css.map": "/keva_web/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.993d4575.chunk.js.LICENSE.txt": "/keva_web/static/js/2.993d4575.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.0d06d938.js",
+    "static/js/runtime-main.291c2230.js",
     "static/css/2.d9ad5f5c.chunk.css",
-    "static/js/2.205a64a2.chunk.js",
+    "static/js/2.993d4575.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.bae6e0c2.chunk.js"
+    "static/js/main.f29d9704.chunk.js"
   ]
 }
