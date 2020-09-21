@@ -165,7 +165,7 @@ class Main extends Component {
     let pinnedFiles = cids.map((c, i) => {
       return (
         <div key={i} style={{alignSelf: 'center'}}>
-          <a href={`https://ipfs.io/ipfs/${c}`} style={{fontSize: 12}}>{c.toString()}</a>
+          <a href={`https://ipfs.io/ipfs/${c}`} style={{fontSize: 12}} target="_blank">{c.toString()}</a>
         </div>
       )
     })

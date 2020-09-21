@@ -29,20 +29,20 @@ const FileIcon = styled(FiImage)`
 
 const UploadIcon = styled(FiUploadCloud)`
   cursor: pointer;
-  color: #fff;
-  font-size: 30px;
+  color: green;
+  font-size: 28px;
   align-self: center;
 `
 
 const CheckIcon = styled(FiCheckCircle)`
   cursor: pointer;
-  color: #fff;
-  font-size: 30px;
+  color: green;
+  font-size: 28px;
   align-self: center;
 `
 
 const SpinnerIcon = styled(Spinner)`
-  color: #fff;
+  color: green;
   align-self: center;
 `
 
@@ -54,27 +54,31 @@ const StyledImg = styled.img`
 `
 
 const ImgContainer = styled.div`
-  height: 350px;
-  width: 350px;
+  height: 300px;
+  width: 300px;
   border-width: 1px;
   border-style: solid;
   border-color: #e0e0e0;
   border-radius: 10px;
+  background-color: #f3f3f3;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: cener;
 `
 
 const Backdrop = styled.div`
   align-self: center;
-  position: relative;
-  top: -350px;
-  left: 0px;
-  height: 60px;
-  width: 350px;
-  opacity: 0.7;
-  background-color: #000;
+  position: absolute;
+  top: 330px;
+  left: calc(50% - 20px);
+  height: 40px;
+  width: 40px;
+  border-radius: 40px;
+  background-color: #fff;
   display: flex;
   justify-content: center;
+  box-shadow: 3px 3px 3px rgba(50,50,50,0.28);
 `
 
 export function ImageUpload(props) {
@@ -109,10 +113,18 @@ export function ImageUpload(props) {
 
   return (
     <>
+      <p style={{alignSelf: 'center', fontSize: 18, color: '#555'}}>IPFS Browser Node</p>
       <InputDiv {...getRootProps({ refKey: 'innerRef' })}>
         <input {...getInputProps()} />
         <ImgContainer>
-          {(imageURL.length > 0) ? <StyledImg src={imageURL} /> : <FileIcon />}
+          {(imageURL.length > 0) ?
+            <StyledImg src={imageURL} />
+            :
+            <>
+              <FileIcon />
+              <p style={{alignSelf: 'center', fontSize: 12, color: '#777', marginTop: 10}}>Click to Add Image</p>
+            </>
+          }
         </ImgContainer>
       </InputDiv>
       {
