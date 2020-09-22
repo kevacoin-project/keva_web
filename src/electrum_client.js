@@ -1,3 +1,5 @@
+// Modified from: https://github.com/you21979/node-electrum-client
+
 import { Client } from './client';
 
 export class ElectrumClient extends Client {

@@ -1,3 +1,5 @@
+// Modified from: https://github.com/you21979/node-electrum-client
+
 import { makeRequest, createPromiseResult, createPromiseResultBatch } from './util';
 const EventEmitter = require('events').EventEmitter;
 

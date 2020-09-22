@@ -1,3 +1,5 @@
+// Modified from https://github.com/BlueWallet/BlueWallet
+
 import { ElectrumClient } from './electrum_client';
 const bitcoin = require('bitcoinjs-lib');
 let reverse = require('buffer-reverse');
