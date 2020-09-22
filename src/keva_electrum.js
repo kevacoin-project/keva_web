@@ -7,7 +7,7 @@ const IS_DEV = true;
 
 let hardcodedPeers = IS_DEV ?
   [
-    { host: '127.0.0.1', ws: '8080' },
+    { host: 'ec2.kevacoin.org', ws: '8000' },
   ]
   :
   [

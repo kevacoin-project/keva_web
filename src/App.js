@@ -156,36 +156,31 @@ class Main extends Component {
 
   async componentDidMount() {
     // Start IPFS.
-    await this.startIpfs();
-    setInterval(async () => await this.checkPeers(), 5000);
+    // await this.startIpfs();
+    //setInterval(async () => await this.checkPeers(), 5000);
+    await this.getKeva();
   }
 
   render() {
-    const {pinned, pinning, cids} = this.state;
-    let pinnedFiles = cids.map((c, i) => {
-      return (
-        <div key={i} style={{alignSelf: 'center'}}>
-          <a href={`https://ipfs.io/ipfs/${c}`} style={{fontSize: 12}} target="_blank">{c.toString()}</a>
-        </div>
-      )
-    })
     return (
       <Container>
-        {/*<Page feature={this.state.feature}/> */}
-        <ImageUpload onUpload={this.onUpload} onFileChange={this.onFileChange} pinned={pinned} pinning={pinning}/>
-        <div style={{marginTop: 10, marginBottom: 10, alignSelf: 'center'}}>
-          { pinnedFiles }
-        </div>
-        <Info>Status: {
-          this.state.ipfsPeers.length > 0
-          ?
-          <span style={{color: 'green'}}>{this.state.ipfsPeers.length} Peers Connected</span>
-          :
-          <span style={{color: 'orange'}}>Connecting to Peers ...</span>
-        }
-        </Info>
-        <Info>Peer Id: {this.state.ipfsID}</Info>
-        <Info>IPFS Version: {this.state.ipfsVersion}</Info>
+        <Page feature={this.state.feature}/>
+        {/*
+          <ImageUpload onUpload={this.onUpload} onFileChange={this.onFileChange} pinned={pinned} pinning={pinning}/>
+          <div style={{marginTop: 10, marginBottom: 10, alignSelf: 'center'}}>
+            { pinnedFiles }
+          </div>
+          <Info>Status: {
+            this.state.ipfsPeers.length > 0
+            ?
+            <span style={{color: 'green'}}>{this.state.ipfsPeers.length} Peers Connected</span>
+            :
+            <span style={{color: 'orange'}}>Connecting to Peers ...</span>
+          }
+          </Info>
+          <Info>Peer Id: {this.state.ipfsID}</Info>
+          <Info>IPFS Version: {this.state.ipfsVersion}</Info>
+        */}
       </Container>
     )
   }
